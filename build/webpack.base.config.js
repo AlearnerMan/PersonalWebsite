@@ -1,5 +1,9 @@
 
 const resolve = require("./utils.js").resolve
+const MiniCssExtractPlugin = require("mini-css-extract-plugin")
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin")
+const UnlifyJsPlugin = require("uglifyjs-webpack-plugin")
+const CopyWebpackPlugin = require("copy-webpack-plugin")
 
 module.exports = {
     // 入口
@@ -12,25 +16,46 @@ module.exports = {
         publicPath:'/'// 打包后的资源的访问路径前缀
     },
     resolve:{
-        extensions:['.js','.json'],
+        extensions:['.js','.json','.jsx'],
         alias:{
             "@": resolve('../src')
         }
     },
+    plugins:[
+        new MiniCssExtractPlugin({
+            // Options similar to the same options in webpackOptions.output
+            // both options are optional
+            filename: '[name].css',
+            chunkFilename: '[id].css',
+        }),
+        new CopyWebpackPlugin({
+            patterns:[
+            { 
+                from: resolve('../static'),
+                to:resolve('../dist/static')
+            }
+        ]})
+    ],
     module:{
         rules:[
             {
-                test:/\.(js|jsx)$/,
+                test:/\.jsx?$/,
                 exclude: /node_modules/,
                 loader:"babel-loader"
-
             },
             {
                 test: /\.css$/,
                 use:[
                     {
-                        loader:'style-loader',
+                        loader: MiniCssExtractPlugin.loader,
+                        options:{
+                            hmr:true,
+                            reloadAll:true
+                        }
                     },
+                    // {
+                    //     loader:'style-loader',
+                    // },
                     {
                         loader:'css-loader'
                     }
@@ -40,8 +65,15 @@ module.exports = {
                 test: /\.less$/,
                 use:[
                     {
-                        loader:'style-loader'
+                        loader: MiniCssExtractPlugin.loader,
+                        options:{
+                            hmr:true,
+                            reloadAll:true
+                        }
                     },
+                    // {
+                    //     loader:'style-loader'
+                    // },
                     {
                         loader:'css-loader'
                     },
@@ -71,4 +103,27 @@ module.exports = {
             }
         ]
     },
+    optimization: {
+        // 压缩css
+        minimizer: [
+            new OptimizeCSSAssetsPlugin({ //只在生产环境下压缩有效
+                cssProcessorOptions: { safe: true, discardComments: { removeAll: true } },
+            }),
+            new UnlifyJsPlugin({ //只在生产环境下压缩有效
+                parallel:false,
+                sourceMap:false,
+                uglifyOptions:{
+                    warnings: false,
+                    compress:{
+                        unused:true,
+                        drop_debugger:true,
+                        drop_console:true,
+                    },
+                    output:{
+                        comments:false
+                    }
+                }
+            })
+        ]
+}
 }
