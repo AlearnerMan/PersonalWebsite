@@ -8,9 +8,9 @@ import LoadableComponent from "@/common/loadable"
 // import Blog from "./blog/Blog.js"
 
 
-const BlogPage = ()=>import("./blog/Blog.js")
+// const BlogPage = ()=>import("./blog/Blog.js")
 
-// const BlogPage = LoadableComponent(()=>import("./blog/Blog.js"))
+const BlogPage = LoadableComponent(()=>import("./blog/Blog.js"))
 
 console.log(12323)
 var array1 = [1,2,3]
@@ -19,6 +19,6 @@ console.log(array1.includes(2))
 
 
 ReactDOM.render(
-    <BlogPage></BlogPage>,
+    <BlogPage/>,
     document.getElementById("root")
 )

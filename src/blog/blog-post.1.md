@@ -1,3 +1,27 @@
+# 初始化项目
+1. 新建文件夹 blog-demo 
+2. 执行npm init命令,创建package.json
+3. 安装基础webpack4.X的包，4以后使用webpack命令的话除了需要安装webpack外， 必须安装webpack-cli包（以为两个包已经分开了）
+4. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Sample blog post
 
 #### April 1, 2020 by [Olivier](/)
