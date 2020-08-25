@@ -1,18 +1,21 @@
 
-const resolve = require("./utils.js").resolve
+const {resolve, entry} = require("./utils.js")
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin")
 const UnlifyJsPlugin = require("uglifyjs-webpack-plugin")
 const CopyWebpackPlugin = require("copy-webpack-plugin")
-
+const Webpack = require("webpack")
 module.exports = {
     // 入口
-    entry:{
-        app:'./src/index'
-    },
+    // entry:{
+    //     app:'./src/index'
+    // },
+    // 多入口
+    entry:entry,
     output:{
-        path: resolve("../dist"), //webpack命令的输出目录
+        path: resolve("../docs"), //webpack命令的输出目录
         filename:"js/[name].[hash].js",
+        chunkFilename:"js/[name].js",
         publicPath:'/'// 打包后的资源的访问路径前缀（webpack-dev-server命令的输出目录）
     },
     resolve:{
@@ -32,9 +35,16 @@ module.exports = {
             patterns:[
             { 
                 from: resolve('../static'),
-                to:resolve('../dist/static')
+                to:resolve('../docs/static')
             }
-        ]})
+        ]}),
+        new Webpack.DefinePlugin({
+            "process.env":{
+                APP_NODE:JSON.stringify(process.env.NODE_ENV)
+            },
+            SEVER_BASE_URL:JSON.stringify("https://dev.demod.com")
+        })
+
     ],
     module:{
         rules:[

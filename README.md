@@ -116,8 +116,8 @@ fun2(args) ---> h(g(f(args)))
  splitChunks默认参数：(是在optimization中的一个property)
  ``` javascript
   splitChunks: {
-    // async表示只从异步加载得模块（动态加载import()）里面进行拆分
-    // initial表示只从入口模块进行拆分
+    // async表示只从异步加载得模块（动态加载import()）里面进行拆分(会拆分出通过懒加载等方式异步加载的模块)
+    // initial表示只从入口模块进行拆分（入口文件会包含node_modules中的react-dom等包,但是在blog.js中异步加载的marterial等插件就没有拆分出来 和业务代码打包成了一个包）
     // all表示以上两者都包括
     chunks: "async",
     minSize: 30000,   // 大于30k会被webpack进行拆包
@@ -151,3 +151,7 @@ fun2(args) ---> h(g(f(args)))
   }
 
  ```
+
+ ## 项目中设置全局变量 可以通过 new Webpack.DefinePlugin({})来设置
+
+ 

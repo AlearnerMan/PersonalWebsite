@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.config.js",
+    "qa": "cross-env NODE_ENV=qa webpack-dev-server --inline --progress --config build/webpack.dev.config.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "node  build/build.js"
   },
@@ -16,7 +17,9 @@
     "chalk": "^4.1.0",
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^6.0.3",
+    "cross-env": "^7.0.2",
     "css-loader": "^4.2.1",
+    "glob": "^7.1.6",
     "less-loader": "^6.2.0",
     "mini-css-extract-plugin": "^0.10.0",
     "optimize-css-assets-webpack-plugin": "^5.0.3",

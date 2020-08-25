@@ -1,6 +1,6 @@
 const { merge } = require("webpack-merge")
 const webpackBaseConfig = require("./webpack.base.config.js")
-const {resolve} = require("./utils.js")
+const {resolve, chunks} = require("./utils.js")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 // 在打包之前会删除之前的打包目录
 const {CleanWebpackPlugin} = require("clean-webpack-plugin")
@@ -16,7 +16,7 @@ module.exports = merge(webpackBaseConfig,{
     mode:"production",
     plugins:[
         new HtmlWebpackPlugin({
-            filename:resolve("../dist/index.html"),
+            filename:resolve("../docs/detail/index.html"),
             template:"index.html",
             inject:true,
             hash:true, // 给每一个script标签中的js文件加一个随机数防止cdn缓存造成js文件不更新 bundle.js?22b9692e22e7be37b57e
@@ -26,7 +26,22 @@ module.exports = merge(webpackBaseConfig,{
                 removeComments:true, // 去注释
                 collapseWhitespace:true, // 去空格
                 removeAttributeQuotes:true, // 去除属性的引号 
-            }
+            },
+            chunks:['detail']
+        }),
+        new HtmlWebpackPlugin({
+            filename:resolve("../docs/index/index.html"),
+            template:"index.html",
+            inject:true,
+            hash:true, // 给每一个script标签中的js文件加一个随机数防止cdn缓存造成js文件不更新 bundle.js?22b9692e22e7be37b57e
+            favicon:resolve('../public/favicon.ico'),
+            // html压缩选项 
+            minify:{
+                removeComments:true, // 去注释
+                collapseWhitespace:true, // 去空格
+                removeAttributeQuotes:true, // 去除属性的引号 
+            },
+            chunks:['index']
         }),
         new CleanWebpackPlugin(),
         new BundleAnalyzerPlugin()
@@ -56,25 +71,7 @@ module.exports = merge(webpackBaseConfig,{
             })
         ],
         splitChunks:{
-            chunks: "all",
-            minSize: 30000,
-            minChunks:1,
-            maxAsyncRequests:5,
-            maxInitialRequests:3,
-            automaticNameDelimiter:'~',
-            name:true,
-            cacheGroups:{
-                //默认配置
-                vendors:{
-                    test:/[\\/]node_modules[\\/]/,
-                    priority:-10
-                },
-                default:{
-                    minChunks:2,
-                    priority:-20,
-                    reuseExistingChunk:true
-                }
-            }
+            chunks: "all"
         }
     },
     
